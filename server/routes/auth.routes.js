@@ -6,9 +6,13 @@ import {
   signup,
   resetPassword,
   verifyEmail,
+  checkAuth,
 } from "../controllers/auth.controller.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 const authRoute = Router();
+
+authRoute.get("/check-auth", verifyToken, checkAuth);
 
 authRoute.post("/signup", signup);
 authRoute.post("/login", login);
