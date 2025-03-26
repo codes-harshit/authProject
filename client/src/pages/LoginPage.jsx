@@ -1,15 +1,26 @@
 import React, { useState } from "react";
 import Input from "../components/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
+import { useAuthStore } from "../store/authStore";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const isLoading = false;
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const { login, isLoading, error } = useAuthStore();
+
+  const handleLogin = async (e) => {
     e.preventDefault();
+    try {
+      await login(email, password);
+      navigate("/home");
+      toast.success("Login successful");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100 p-6 rounded-4xl">
@@ -42,6 +53,7 @@ const LoginPage = () => {
             "Login"
           )}
         </button>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </form>
       <div className="flex items-center justify-center gap-2 text-sm mt-4">
         <p className="text-gray-600">Don't have an account?</p>

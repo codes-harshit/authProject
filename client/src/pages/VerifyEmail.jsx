@@ -3,18 +3,20 @@ import Input from "../components/Input";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
+import toast from "react-hot-toast";
 
 const VerifyEmail = () => {
   const [code, setCode] = useState("");
   const navigate = useNavigate();
 
-  const { verifyEmail, isLoading } = useAuthStore();
+  const { verifyEmail, isLoading, error } = useAuthStore();
 
   const handleVerify = async (e) => {
     e.preventDefault();
     try {
       await verifyEmail(code);
       navigate("/login");
+      toast.success("Email verified successfully");
     } catch (error) {
       console.log(error);
     }
@@ -32,6 +34,7 @@ const VerifyEmail = () => {
           value={code}
           onChange={(e) => setCode(e.target.value)}
         />
+        {error && <p className="text-red-500 mt-2">{error}</p>}
 
         <button
           className="w-80 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
