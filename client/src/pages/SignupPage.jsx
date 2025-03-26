@@ -1,16 +1,25 @@
 import React, { useState } from "react";
 import Input from "../components/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
+import { useAuthStore } from "../store/authStore";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const isLoading = false;
 
-  const handleSignUp = (e) => {
+  const { signup, error, isLoading } = useAuthStore();
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
+    try {
+      await signup(name, email, password);
+      navigate("/verify-email");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100 p-6 rounded-4xl">
@@ -37,7 +46,7 @@ const SignupPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
+        {error && <p className="text-red-500 mt-2 font-semibold">{error}</p>}
         <button
           className="w-80 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           type="submit"
