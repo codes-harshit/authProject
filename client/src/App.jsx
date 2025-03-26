@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import VerifyEmail from "./pages/VerifyEmail.jsx";
 import { useAuthStore } from "./store/authStore.js";
 import { Loader } from "lucide-react";
+import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 
 //
 const RedirectAuthenticatedUser = ({ children }) => {
@@ -73,6 +74,10 @@ function App() {
           />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route
+            path="/reset-password/:token"
+            element={<ResetPasswordPage />}
+          />
         </Routes>
       )}
 

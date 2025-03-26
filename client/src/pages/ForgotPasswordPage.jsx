@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import Input from "../components/Input";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPasswordPage = () => {
   const { isLoading, error, forgotPassword } = useAuthStore();
-
+  const Navigate = useNavigate();
   const [email, setEmail] = useState("");
 
   const handleForgotPassword = async (e) => {
@@ -14,6 +15,7 @@ const ForgotPasswordPage = () => {
     try {
       await forgotPassword(email);
       toast.success("Reset Password Email sent successfully");
+      Navigate("/login");
     } catch (error) {
       console.log(error);
     }
