@@ -1,12 +1,23 @@
 import React, { useState } from "react";
 import Input from "../components/Input";
+import { useAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
+import { Loader } from "lucide-react";
 
 const VerifyEmail = () => {
   const [code, setCode] = useState("");
-  const isLoading = false;
+  const navigate = useNavigate();
 
-  const handleVerify = (e) => {
+  const { verifyEmail, isLoading } = useAuthStore();
+
+  const handleVerify = async (e) => {
     e.preventDefault();
+    try {
+      await verifyEmail(code);
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100 p-6 rounded-4xl">
