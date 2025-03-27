@@ -9,6 +9,12 @@ import {
   sendVerificationEmail,
   sendWelcomeEmail,
 } from "../mailtrap/emails.js";
+import {
+  sendPasswordResetMailFromMailerSend,
+  sendResetSuccessEmailFromMailsender,
+  sendVerificationEmailFromMailerSend,
+  sendWelcomeEmailFromMailersend,
+} from "../mailersend/emails.js";
 
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
@@ -40,7 +46,12 @@ export const signup = async (req, res) => {
     // jwt
 
     generateTokenAndSetCookie(res, user._id);
-    await sendVerificationEmail(user.email, verificationToken);
+    // await sendVerificationEmail(user.email, verificationToken);
+    await sendVerificationEmailFromMailerSend(
+      user.email,
+      user.name,
+      verificationToken
+    );
 
     res.status(201).json({
       success: true,
@@ -76,7 +87,8 @@ export const verifyEmail = async (req, res) => {
 
     await user.save();
 
-    await sendWelcomeEmail(user.email, user.name);
+    // await sendWelcomeEmailFromMailersend(user.email, user.name);
+    await sendWelcomeEmailFromMailersend(user.email, user.name);
 
     return res.status(200).json({
       success: true,
@@ -157,8 +169,13 @@ export const forgotPassword = async (req, res) => {
 
     await user.save();
 
-    sendPasswordResetMail(
+    // sendPasswordResetMail(
+    //   user.email,
+    //   `${process.env.CLIENT_URL}/reset-password/${resetToken}`
+    // );
+    sendPasswordResetMailFromMailerSend(
       user.email,
+      user.name,
       `${process.env.CLIENT_URL}/reset-password/${resetToken}`
     );
 
@@ -198,7 +215,8 @@ export const resetPassword = async (req, res) => {
 
     await user.save();
 
-    await sendResetSuccessEmail(user.email);
+    // await sendResetSuccessEmail(user.email);
+    await sendResetSuccessEmailFromMailsender(user.email, user.name);
 
     return res.status(200).json({
       success: true,
